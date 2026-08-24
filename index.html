@@ -33,7 +33,7 @@
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     borderRadius: {
-                        'bento': '24px',
+                        'bento': '22px',
                         'inner': '14px',
                         'ctrl': '12px',
                     }
@@ -52,14 +52,14 @@
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
 
         .active-scale {
-            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease, border-color 0.15s ease;
         }
         .active-scale:active {
             transform: scale(0.985);
         }
 
         .glass-dock {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -103,99 +103,126 @@
         const MAINTAINER = "Mickael";
         const MAINTAINER_CONTACT = "Teams";
         const LAST_UPDATE = "24/08/2026";
-        const STORAGE_KEY = 'cultura_companion_v2';
+        const STORAGE_KEY = 'cultura_companion_v3';
 
-        const TASKS_DATA = [
+        // Liste des cartes du Bento (groupées par source pour l'étape 2 & 3)
+        const SOURCE_GROUPS = [
             {
-                id: 'location',
-                title: 'Location',
-                targetInfo: 'Prix Total HT (S-1)',
-                icon: 'fa-box',
-                accent: '#0066FF',
-                link: 'https://location.cultura.com/admin/transactions',
-                steps: [
-                    'Ouvrir l\'administration des transactions Location',
-                    'Exporter la plage de la semaine passée (S-1) au format CSV',
-                    'Récupérer le Prix Total HT et le reporter dans le Sheet'
-                ]
-            },
-            {
-                id: 'pbi_ca_ent',
-                title: 'Power BI — CA Enterprise',
-                targetInfo: 'Chiffre d\'affaires CA Enterprise (S-1)',
-                icon: 'fa-chart-column',
-                accent: '#E8543A',
-                link: 'https://app.fabric.microsoft.com/groups/me/apps/b57ba65b-c24e-4f5f-a67e-2bba90887f9e/reports/c75c6996-8d0a-411c-ae36-642bf2cad328/55b11de6da5c4b1c9667?ctid=37ddb62e-1d49-42b1-aacc-e08f83d1253d&redirectedFromSignup=1,1&experience=power-bi',
-                steps: [
-                    'Sélecteur VA Dynamique ➔ mettre sur "Tout" partout',
-                    'Filtrer sur la période Semaine Passée (S-1)',
-                    'Noter le chiffre d\'affaires CA Enterprise dans le Sheet'
-                ]
-            },
-            {
-                id: 'pbi_marge_web',
-                title: 'Power BI — Marge Web',
-                targetInfo: 'Pourcentage de marge Web (S-1)',
-                icon: 'fa-laptop',
-                accent: '#7C4DEB',
-                link: 'https://app.fabric.microsoft.com/groups/me/apps/b57ba65b-c24e-4f5f-a67e-2bba90887f9e/reports/c75c6996-8d0a-411c-ae36-642bf2cad328/55b11de6da5c4b1c9667?ctid=37ddb62e-1d49-42b1-aacc-e08f83d1253d&redirectedFromSignup=1,1&experience=power-bi',
-                steps: [
-                    'Canal de vente ➔ sélectionner "Web"',
-                    'CEC ➔ sélectionner "B2C"',
-                    'Reporter le % de marge Web S-1 dans le Sheet'
-                ]
-            },
-            {
-                id: 'pbi_ecom_ccw',
-                title: 'Power BI — CA Ecom CCW',
-                targetInfo: 'Expédié : Total (Ecom + CCW) (S-1)',
+                groupId: 'src_pbi_ccw',
+                sourceTitle: 'Power BI — Expédié & CCW',
                 icon: 'fa-truck',
                 accent: '#D97706',
                 link: 'https://app.fabric.microsoft.com/groups/me/apps/0c040b49-d730-4047-ba7c-65b8937b0fb2/reports/07e1b5f9-2cc9-4093-bc18-2f3bdf4c4491/404d3ead94a78681c7b5?experience=fabric-developer',
-                steps: [
-                    'Accéder au rapport Power BI Ecom & CCW',
-                    'Se positionner sur l\'onglet "Expédié"',
-                    'Reporter le Total (Ecom + CCW) pour S-1 dans le Sheet'
+                tasks: [
+                    {
+                        id: 'step_1_ecom_ccw',
+                        stepNum: '1',
+                        colTag: 'Colonne C',
+                        title: 'Ecom CCW',
+                        targetInfo: 'Expédié : Total (Ecom + CCW)',
+                        steps: [
+                            'Accéder au rapport Power BI Ecom & CCW',
+                            'Se positionner sur l\'onglet "Expédié"',
+                            'Reporter le Total (Ecom + CCW) pour S-1'
+                        ]
+                    }
                 ]
             },
             {
-                id: 'marketplace',
-                title: 'Marketplace',
-                targetInfo: 'Données Marketplace — ligne 7',
+                groupId: 'src_pbi_finance',
+                sourceTitle: 'Power BI — CA Enterprise & Marge',
+                sourceBadge: 'Source commune (2 relevés)',
+                icon: 'fa-chart-pie',
+                accent: '#7C4DEB',
+                link: 'https://app.fabric.microsoft.com/groups/me/apps/b57ba65b-c24e-4f5f-a67e-2bba90887f9e/reports/c75c6996-8d0a-411c-ae36-642bf2cad328/55b11de6da5c4b1c9667?ctid=37ddb62e-1d49-42b1-aacc-e08f83d1253d&redirectedFromSignup=1,1&experience=power-bi',
+                tasks: [
+                    {
+                        id: 'step_2_part_marge',
+                        stepNum: '2',
+                        colTag: 'Colonne F',
+                        title: 'Part marge Web',
+                        targetInfo: 'Pourcentage de marge Web B2C',
+                        steps: [
+                            'Canal de vente ➔ sélectionner "Web"',
+                            'CEC ➔ sélectionner "B2C"',
+                            'Reporter le % de marge Web S-1'
+                        ]
+                    },
+                    {
+                        id: 'step_3_ca_ent',
+                        stepNum: '3',
+                        colTag: 'Colonne G',
+                        title: 'CA Entreprise',
+                        targetInfo: 'Chiffre d\'affaires CA Enterprise',
+                        steps: [
+                            'Sélecteur VA Dynamique ➔ mettre sur "Tout" partout',
+                            'Filtrer sur la période Semaine Passée (S-1)',
+                            'Noter le CA Enterprise dans le Sheet'
+                        ]
+                    }
+                ]
+            },
+            {
+                groupId: 'src_mkp',
+                sourceTitle: 'SharePoint Marketplace',
                 icon: 'fa-store',
                 accent: '#0D9488',
                 link: 'https://cultura365.sharepoint.com/:x:/s/Marketplace/EQ-yjtSHyylAkh8C4EqYoHgBqUnmG-xDbX841U4qRbHJWg?e=fCFja0',
-                steps: [
-                    'Ouvrir le fichier SharePoint Marketplace',
-                    'Vérifier que l\'équipe a mis à jour la semaine (ligne 7)',
-                    'Si du retard est constaté ➔ relancer l\'équipe Marketplace sur Teams'
+                tasks: [
+                    {
+                        id: 'step_4_ca_mkp',
+                        stepNum: '4',
+                        colTag: 'Colonne M',
+                        title: 'CA MKP',
+                        targetInfo: 'Données Marketplace — ligne 7',
+                        steps: [
+                            'Ouvrir le fichier SharePoint Marketplace',
+                            'Vérifier la mise à jour de la semaine (ligne 7)',
+                            'Si retard constaté ➔ relancer l\'équipe MKP sur Teams'
+                        ]
+                    }
                 ]
             },
             {
-                id: 'vivlio',
-                title: 'Ebook Vivlio',
-                targetInfo: 'Partie bleue du graphique camembert',
+                groupId: 'src_location',
+                sourceTitle: 'Admin Location',
+                icon: 'fa-box',
+                accent: '#0066FF',
+                link: 'https://location.cultura.com/admin/transactions',
+                tasks: [
+                    {
+                        id: 'step_5_ca_loc',
+                        stepNum: '5',
+                        colTag: 'Colonne N',
+                        title: 'CA Location',
+                        targetInfo: 'Prix Total HT (S-1)',
+                        steps: [
+                            'Ouvrir l\'admin des transactions Location',
+                            'Exporter la plage S-1 au format CSV',
+                            'Reporter le Prix Total HT dans le Sheet'
+                        ]
+                    }
+                ]
+            },
+            {
+                groupId: 'src_vivlio',
+                sourceTitle: 'Portail Vivlio',
                 icon: 'fa-book-open',
                 accent: '#0284C7',
                 accessNote: 'Identifiants Vivlio : voir DM Teams',
-                steps: [
-                    'Se connecter à l\'espace Vivlio (identifiants transmis en DM Teams)',
-                    'Consulter le camembert de répartition',
-                    'Prendre la valeur de la partie bleue et la mettre dans le Sheet'
-                ]
-            },
-            {
-                id: 'magasin',
-                title: 'Magasin — Taux de transformation',
-                targetInfo: 'Taux de transformation magasin (S-1)',
-                icon: 'fa-shop',
-                accent: '#DB2777',
-                link: 'https://hub.cultura.intra/portal/auth/portal/hub/Commerce/Indicateurs+commerciaux/Taux+de+transformation',
-                requiresVpn: true,
-                steps: [
-                    'Accéder à l\'intranet Hub Cultura',
-                    'Sélectionner la bonne semaine (S-1)',
-                    'Copier le taux de transformation magasin dans le Sheet'
+                tasks: [
+                    {
+                        id: 'step_6_vivlio',
+                        stepNum: '6',
+                        colTag: 'Colonne P',
+                        title: 'Ebook Vivlio',
+                        targetInfo: 'Partie bleue du graphique camembert',
+                        steps: [
+                            'Se connecter à l\'espace Vivlio',
+                            'Consulter le camembert de répartition',
+                            'Prendre la valeur bleue et l\'ajouter au Sheet'
+                        ]
+                    }
                 ]
             }
         ];
@@ -208,28 +235,19 @@
             { id: 's5', label: 'Expédié', desc: 'Vue ventes expédiées', icon: 'fa-boxes-stacked' },
         ];
 
+        // Calcul à plat de la liste des 6 tâches
+        const ALL_TASK_IDS = SOURCE_GROUPS.flatMap(g => g.tasks.map(t => t.id));
+
         function getPeriodKey() {
             const now = new Date();
-            if (RESET_MODE === 'day') {
-                const y = now.getFullYear();
-                const m = String(now.getMonth() + 1).padStart(2, '0');
-                const d = String(now.getDate()).padStart(2, '0');
-                return `${y}-${m}-${d}`;
-            }
-            const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-            const dayNum = d.getUTCDay() || 7;
-            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-            return `${d.getUTCFullYear()}-S${String(weekNo).padStart(2, '0')}`;
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         }
 
         function getPeriodLabel() {
-            const key = getPeriodKey();
-            if (RESET_MODE === 'day') {
-                return new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-            }
-            return `Semaine ${key.split('-S')[1]} · ${key.split('-S')[0]}`;
+            return new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
         }
 
         const EMPTY_STATE = { tasks: {}, slides: {}, looker: false };
@@ -284,7 +302,7 @@
                 toastTimer.current = setTimeout(() => setToast(null), 2500);
             };
 
-            const taskCount = TASKS_DATA.length;
+            const taskCount = ALL_TASK_IDS.length; // 6
             const completedTaskCount = Object.values(completedTasks).filter(Boolean).length;
             const slidesCount = LOOKER_SLIDES.length;
             const completedSlidesCount = Object.values(slidesDone).filter(Boolean).length;
@@ -324,8 +342,8 @@
             return (
                 <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 pb-28 md:pb-12">
 
-                    {/* HEADER BENTO */}
-                    <header className="flex items-center justify-between gap-4 mb-6 bg-white/90 backdrop-blur border border-slate-200/80 px-5 py-3.5 rounded-bento shadow-bento">
+                    {/* HEADER */}
+                    <header className="flex items-center justify-between gap-4 mb-6 bg-white/95 backdrop-blur border border-slate-200/80 px-5 py-3.5 rounded-bento shadow-bento">
                         <div className="flex items-center gap-3.5">
                             <div className="w-10 h-10 rounded-inner bg-cultura text-white flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
                                 C
@@ -340,7 +358,7 @@
                             </div>
                         </div>
 
-                        {/* NAVIGATION DESKTOP */}
+                        {/* TABS */}
                         <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/60">
                             {tabs.map((tab, i) => (
                                 <button
@@ -375,13 +393,11 @@
                         </a>
                     </header>
 
-                    {/* BENTO STATUT & PROGRESSION */}
+                    {/* BENTO STATUT */}
                     <section className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        
-                        {/* Tuile 1 : Synthèse & Période */}
-                        <div className="md:col-span-2 bg-gradient-to-br from-white via-white to-slate-50/60 border border-slate-200/80 rounded-bento p-6 shadow-bento flex flex-col justify-between">
+                        <div className="md:col-span-2 bg-gradient-to-br from-white via-white to-slate-50/70 border border-slate-200/80 rounded-bento p-6 shadow-bento flex flex-col justify-between">
                             <div className="flex items-center justify-between gap-3 mb-4">
-                                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-cultura-electric bg-cultura-light border border-cultura-border px-3 py-1 rounded-full">
+                                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-cultura-electric bg-cultura-light border border-cultura-border px-3 py-1 rounded-full capitalize">
                                     {getPeriodLabel()}
                                 </span>
                                 <span className="text-[12px] font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
@@ -390,15 +406,15 @@
                             </div>
                             <div>
                                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                                    Routine de reporting
+                                    Relevés ordonnés par colonne
                                 </h2>
-                                <p className="text-[14px] text-slate-600 mt-1.5 leading-relaxed">
-                                    <span className="tnum font-bold text-slate-900">{currentDone}</span> sur <span className="tnum font-bold text-slate-900">{totalSteps}</span> étapes complétées. Remise à zéro quotidienne à minuit.
+                                <p className="text-[13px] text-slate-600 mt-1.5 leading-relaxed">
+                                    <span className="tnum font-bold text-slate-900">{completedTaskCount}</span> sur <span className="tnum font-bold text-slate-900">{taskCount}</span> métriques reportées. Les étapes 2 et 3 sont issues du même rapport Power BI.
                                 </p>
                             </div>
                         </div>
 
-                        {/* Tuile 2 : Jauge d'avancement Bento */}
+                        {/* JAUGE */}
                         <div className="bg-white border border-slate-200/80 rounded-bento p-6 shadow-bento flex items-center justify-between gap-4">
                             <div>
                                 <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400">Avancement</p>
@@ -427,129 +443,140 @@
                                 <i className="fa-solid fa-bolt text-cultura-electric text-sm absolute"></i>
                             </div>
                         </div>
-
                     </section>
 
                     <main className="flex-1">
 
-                        {/* ONGLET 1 : RELEVÉS BENTO */}
+                        {/* ONGLET 1 : RELEVÉS BENTO GROUPÉS */}
                         {activeTab === 'tasks' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {TASKS_DATA.map((task, index) => {
-                                    const isDone = completedTasks[task.id];
-                                    const isExpanded = expandedTaskId === task.id;
-                                    const isHero = index === 0;
+                                {SOURCE_GROUPS.map((group) => {
+                                    const isGroupMulti = group.tasks.length > 1;
+                                    const isGroupDone = group.tasks.every(t => completedTasks[t.id]);
 
                                     return (
                                         <article
-                                            key={task.id}
+                                            key={group.groupId}
                                             className={`rounded-bento border transition-all duration-300 flex flex-col justify-between shadow-bento shadow-bento-hover ${
-                                                isHero ? 'md:col-span-2' : 'col-span-1'
+                                                isGroupMulti ? 'md:col-span-2 lg:col-span-2 bg-gradient-to-b from-white to-slate-50/40' : 'col-span-1 bg-white'
                                             } ${
-                                                isDone 
-                                                    ? 'bg-slate-50/70 border-slate-200/60 opacity-75' 
-                                                    : 'bg-white border-slate-200/80 hover:border-slate-300'
+                                                isGroupDone ? 'border-slate-200/60 opacity-80' : 'border-slate-200/80 hover:border-slate-300'
                                             }`}
                                         >
                                             <div className="p-6">
-                                                {/* En-tête de carte */}
-                                                <div className="flex items-start justify-between gap-3 mb-4">
+                                                {/* En-tête de la source */}
+                                                <div className="flex items-center justify-between gap-3 mb-5 pb-3 border-b border-slate-100">
                                                     <div className="flex items-center gap-3 min-w-0">
                                                         <div
                                                             className="w-10 h-10 rounded-inner flex items-center justify-center shrink-0 text-[14px]"
-                                                            style={{
-                                                                backgroundColor: isDone ? '#F1F5F9' : task.accent + '14',
-                                                                color: isDone ? '#94A3B8' : task.accent
-                                                            }}
+                                                            style={{ backgroundColor: group.accent + '14', color: group.accent }}
                                                         >
-                                                            <i className={`fa-solid ${task.icon}`}></i>
+                                                            <i className={`fa-solid ${group.icon}`}></i>
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <span className="tnum text-[11px] font-bold text-slate-400 tracking-wider block">
-                                                                ÉTAPE {String(index + 1).padStart(2, '0')}
-                                                            </span>
-                                                            <h3 className={`text-[16px] font-bold leading-tight ${isDone ? 'line-through text-slate-400' : 'text-slate-900'}`}>
-                                                                {task.title}
+                                                            <h3 className="text-[15px] font-bold text-slate-900 leading-tight truncate">
+                                                                {group.sourceTitle}
                                                             </h3>
+                                                            {group.sourceBadge && (
+                                                                <span className="text-[11px] font-semibold text-purple-700 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-full inline-block mt-0.5">
+                                                                    {group.sourceBadge}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
 
-                                                    {/* Checkbox ergonomique */}
-                                                    <button
-                                                        onClick={() => toggleTask(task.id)}
-                                                        aria-pressed={Boolean(isDone)}
-                                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition active-scale shrink-0 ${
-                                                            isDone
-                                                                ? 'bg-emerald-600 text-white shadow-sm'
-                                                                : 'bg-slate-100 text-slate-300 hover:text-slate-400 hover:bg-slate-200/80 border border-slate-200/60'
-                                                        }`}
-                                                    >
-                                                        <i className="fa-solid fa-check text-[12px]"></i>
-                                                    </button>
-                                                </div>
-
-                                                {/* Donnée clé à relever */}
-                                                <div className="bg-slate-50 border border-slate-100/80 rounded-inner px-3.5 py-2.5 mb-3 flex items-center gap-2">
-                                                    <i className="fa-solid fa-bullseye text-[12px] text-cultura shrink-0"></i>
-                                                    <span className="text-[13px] font-semibold text-slate-700 truncate">
-                                                        {task.targetInfo}
-                                                    </span>
-                                                </div>
-
-                                                {/* Notes d'alerte / accès */}
-                                                {task.requiresVpn && (
-                                                    <div className="rounded-inner bg-amber-50/80 border border-amber-200/60 px-3 py-2 mb-2 flex items-center gap-2 text-amber-800 text-[12px] font-medium">
-                                                        <i className="fa-solid fa-shield-halved text-amber-600"></i>
-                                                        <span>Réseau interne / VPN Cultura requis</span>
-                                                    </div>
-                                                )}
-                                                {task.accessNote && (
-                                                    <div className="rounded-inner bg-slate-50 border border-slate-200/60 px-3 py-2 mb-2 flex items-center gap-2 text-slate-600 text-[12px]">
-                                                        <i className="fa-solid fa-key text-slate-400"></i>
-                                                        <span>{task.accessNote}</span>
-                                                    </div>
-                                                )}
-
-                                                {/* Accordéon détails des étapes */}
-                                                <div className="mt-3">
-                                                    <button
-                                                        onClick={() => toggleExpand(task.id)}
-                                                        className="text-[12px] font-semibold text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5"
-                                                    >
-                                                        <i className={`fa-solid fa-chevron-right text-[10px] transition-transform ${isExpanded ? 'rotate-90' : ''}`}></i>
-                                                        <span>{isExpanded ? 'Masquer le protocole' : 'Voir le protocole pas à pas'}</span>
-                                                    </button>
-
-                                                    {isExpanded && (
-                                                        <ol className="mt-3 space-y-2 bg-slate-50/70 p-3.5 rounded-inner border border-slate-100">
-                                                            {task.steps.map((step, sIdx) => (
-                                                                <li key={sIdx} className="flex items-start gap-2.5 text-[12px] text-slate-600 leading-relaxed list-none">
-                                                                    <span className="tnum w-4 h-4 rounded-full bg-white border border-slate-200 text-slate-500 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
-                                                                        {sIdx + 1}
-                                                                    </span>
-                                                                    <span>{step}</span>
-                                                                </li>
-                                                            ))}
-                                                        </ol>
+                                                    {group.link && (
+                                                        <a
+                                                            href={group.link}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-[12px] font-semibold text-cultura hover:text-cultura-electric transition inline-flex items-center gap-1.5 active-scale shrink-0"
+                                                        >
+                                                            <span>Ouvrir</span>
+                                                            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                                        </a>
                                                     )}
                                                 </div>
-                                            </div>
 
-                                            {/* Action Lien source */}
-                                            {task.link && (
-                                                <div className="px-6 py-3.5 bg-slate-50/50 border-t border-slate-100 rounded-b-bento flex items-center justify-between">
-                                                    <a
-                                                        href={task.link}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-[12px] font-semibold text-cultura hover:text-cultura-electric transition inline-flex items-center gap-1.5 active-scale"
-                                                    >
-                                                        <span>Ouvrir la plateforme source</span>
-                                                        <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                                                    </a>
-                                                    <span className="text-[11px] text-slate-400 font-medium">S-1</span>
+                                                {/* Notes de groupe */}
+                                                {group.accessNote && (
+                                                    <div className="rounded-inner bg-slate-50 border border-slate-200/60 px-3 py-2 mb-4 flex items-center gap-2 text-slate-600 text-[12px]">
+                                                        <i className="fa-solid fa-key text-slate-400"></i>
+                                                        <span>{group.accessNote}</span>
+                                                    </div>
+                                                )}
+
+                                                {/* Liste des tâches/colonnes associées */}
+                                                <div className={`grid gap-4 ${isGroupMulti ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                                                    {group.tasks.map((task) => {
+                                                        const isDone = completedTasks[task.id];
+                                                        const isExpanded = expandedTaskId === task.id;
+
+                                                        return (
+                                                            <div
+                                                                key={task.id}
+                                                                className={`rounded-inner border p-4 transition-all ${
+                                                                    isDone ? 'bg-emerald-50/40 border-emerald-200/70' : 'bg-slate-50/70 border-slate-200/70'
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-start justify-between gap-2 mb-2">
+                                                                    <div>
+                                                                        <div className="flex items-center gap-2 mb-1">
+                                                                            <span className="tnum text-[11px] font-bold text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded-full">
+                                                                                Étape {task.stepNum}
+                                                                            </span>
+                                                                            <span className="text-[11px] font-bold text-cultura bg-cultura-light px-2 py-0.5 rounded-full">
+                                                                                {task.colTag}
+                                                                            </span>
+                                                                        </div>
+                                                                        <h4 className={`text-[14px] font-bold ${isDone ? 'line-through text-slate-400' : 'text-slate-900'}`}>
+                                                                            {task.title}
+                                                                        </h4>
+                                                                    </div>
+
+                                                                    <button
+                                                                        onClick={() => toggleTask(task.id)}
+                                                                        aria-pressed={Boolean(isDone)}
+                                                                        className={`w-7 h-7 rounded-full flex items-center justify-center transition active-scale shrink-0 ${
+                                                                            isDone
+                                                                                ? 'bg-emerald-600 text-white shadow-sm'
+                                                                                : 'bg-white text-slate-300 hover:text-slate-500 border border-slate-200'
+                                                                        }`}
+                                                                    >
+                                                                        <i className="fa-solid fa-check text-[11px]"></i>
+                                                                    </button>
+                                                                </div>
+
+                                                                <p className="text-[12px] text-slate-600 font-medium mt-1">
+                                                                    🎯 <span className="font-semibold">{task.targetInfo}</span>
+                                                                </p>
+
+                                                                {/* Dépliant d'étapes */}
+                                                                <div className="mt-2.5 pt-2 border-t border-slate-200/60">
+                                                                    <button
+                                                                        onClick={() => toggleExpand(task.id)}
+                                                                        className="text-[11px] font-semibold text-slate-500 hover:text-slate-800 transition flex items-center gap-1"
+                                                                    >
+                                                                        <i className={`fa-solid fa-chevron-right text-[9px] transition-transform ${isExpanded ? 'rotate-90' : ''}`}></i>
+                                                                        <span>{isExpanded ? 'Masquer' : 'Détails filtres'}</span>
+                                                                    </button>
+
+                                                                    {isExpanded && (
+                                                                        <ol className="mt-2 space-y-1.5 bg-white p-2.5 rounded-ctrl border border-slate-100 text-[11px] text-slate-600">
+                                                                            {task.steps.map((step, sIdx) => (
+                                                                                <li key={sIdx} className="flex items-start gap-1.5 list-none">
+                                                                                    <span className="font-bold text-slate-400">•</span>
+                                                                                    <span>{step}</span>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ol>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
-                                            )}
+                                            </div>
                                         </article>
                                     );
                                 })}
@@ -570,7 +597,7 @@
                                 </div>
 
                                 <p className="text-[13px] text-slate-600 leading-relaxed bg-slate-50 px-4 py-3.5 rounded-inner border border-slate-100">
-                                    Une fois toutes les données de la semaine S-1 reportées dans le Google Sheet, ouvrez le rapport Looker Studio pour vérifier l'exactitude des calculs.
+                                    Une fois les 6 étapes de la semaine S-1 reportées dans le Google Sheet, ouvrez le rapport Looker Studio pour vérifier l'exactitude des calculs.
                                 </p>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -604,7 +631,7 @@
                         {activeTab === 'ppt' && (
                             <div className="space-y-4">
                                 <p className="text-[13px] text-slate-500 px-1 font-medium">
-                                    Captures Looker Studio à exporter pour intégration dans le PPT Weekly.
+                                    Captures Looker Studio à insérer dans le PPT Weekly.
                                 </p>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
